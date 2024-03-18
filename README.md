@@ -49,5 +49,14 @@ let request_line = buf_reader.lines().next().unwrap().unwrap();
 
 Saya melakukan _refactoring_ pada `main.rs` agar tetap sesuai dengan _clean code_. yaitu `DRY` (Don't Repeat Yourself). Langkah yang saya lakukan yaitu keluarkan semua variabel yang sama pada blok `if-else`. Perhatikan bahwa sebelumnya `contents` dan `status_line` didefinisikan spesifik untuk tiap blok `if` dan `else`. Hal ini menyebabkan variabel ini tidak dapat digunakan di luar cakupan tersebut. Untuk itu, gunakan `let (status_line, contents) = ...` untuk menangani hal tersebut.
 
+## Milestone 4: Simulation Slow Response
+Disini kita akan mensimulasikan respons lambat untuk _web server_. 
+
+Gunakan fungsi `thread::sleep` digunakan untuk menunda eksekusi program selama jangka waktu tertentu. Gunakan juga `match` untuk memeriksa baris _request_ yang diterima dari klien.
+
+Jika _request_-nya adalah `"GET /sleep HTTP/1.1"`, server akan _sleep_ selama 10 detik sebelum memberikan respons. Ini mensimulasikan respons lambat yang akan mempengaruhi permintaan lain ke server.
+
+Kita coba buka dua jendela _browser_ untuk membandingkan laman dengan _endpoint_ `/` dan `/sleep`. Jika kita memuat `/` setelah memuat `/sleep`, terlihat bahwa `/` menunggu sampai `/sleep` selesai _sleep_ selama 10 detik.
+
 ## Referensi
 [Final Project: Building a Multithreaded Web Server](https://rust-book.cs.brown.edu/ch20-00-final-project-a-web-server.html)
