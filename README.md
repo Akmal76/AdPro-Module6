@@ -4,8 +4,7 @@
 - NPM: 2206081534
 - Kelas: Pemrograman Lanjut A
 
-## Commit 1 Reflection
-### Milestone 1: Single-Threaded Web Server
+## Milestone 1: Single-Threaded Web Server
 
 Dalam membuat _single-threaded web server_, terdapat dua protokol utama yang terlibat yaitu **Hypertext Transfer Protocol (HTTP)** dan **Transmission Control Protocol (TCP)**. Prinsip dari kedua protokol ini yaitu _request-respone_ artinya _server_ menerima dan merespon _request_ dari _client_.
 
@@ -23,6 +22,16 @@ Untuk menangani bagaimana _server_ akan berperilaku ketika menerima _request_ da
 
 * `BufReader` membaca _stream_ atau baris-baris dari `TcpStream` dengan metode `lines()`.
 * `http_request` mengumpulkan baris-baris permintaan HTTP yang diterima dari browser.
+
+## Milestone 2: Returning HTML
+Screenshot:
+<img src='img/commit2.png'>
+
+Fungsi `handle_connection` menggunakan `fs::read_to_string` untuk membaca konten dari file `hello.html` ke dalam sebuah string. Hal tersebut berguna untuk mengirimkan konten HTML sebagai bagian dari respons yang dikirimkan kembali kepada pengguna.
+
+Setelah itu, buat respons HTTP dengan status line `"HTTP/1.1 200 OK"` dan _header_ `Content-Length` yang menunjukkan panjang dari konten HTML yang akan dikirimkan, dan menambahkan konten HTML sebagai badan (body) dari respons.
+
+Selanjutnya, kita mengirimkan respons tersebut melalui _stream_ TCP menggunakan metode `write_all`.
 
 ## Referensi
 [Final Project: Building a Multithreaded Web Server](https://rust-book.cs.brown.edu/ch20-00-final-project-a-web-server.html)
