@@ -33,5 +33,21 @@ Setelah itu, buat respons HTTP dengan status line `"HTTP/1.1 200 OK"` dan _heade
 
 Selanjutnya, kita mengirimkan respons tersebut melalui _stream_ TCP menggunakan metode `write_all`.
 
+## Milestone 3: Validating Request and Selectively Responding
+Screenshot:
+<img src='img/commit3.png'>
+
+Pada awalnya, _web server_ selalu menampilkan `hello.html` apapun _request_-nya. Kali ini, kita menambahkan fungsionalitas untuk memeriksa apakah browser meminta `/` sebelum mengembalikan file HTML. Jika permintaan tidak sesuai, kita akan mengembalikan respons dengan kode status `404` dan halaman error HTML yang sesuai. Penerapan `404.html` mirip seperti `hello.html`.
+
+```rust
+let request_line = buf_reader.lines().next().unwrap().unwrap();
+```
+* `.lines()`, mendapatkan iterator baris-baris dari `BufReader`.
+* `.next()`, mendapatkan opsi pertama dari iterator tersebut.
+* `unwrap()` pertama, mengeluarkan opsi yang mungkin (`Option`) dari `. next()`
+* `unwrap()` kedua, mengeluarkan nilai yang mungkin (`Result`) dari hasil `.next()` tersebut.
+
+Saya melakukan _refactoring_ pada `main.rs` agar tetap sesuai dengan _clean code_. yaitu `DRY` (Don't Repeat Yourself). Langkah yang saya lakukan yaitu keluarkan semua variabel yang sama pada blok `if-else`. Perhatikan bahwa sebelumnya `contents` dan `status_line` didefinisikan spesifik untuk tiap blok `if` dan `else`. Hal ini menyebabkan variabel ini tidak dapat digunakan di luar cakupan tersebut. Untuk itu, gunakan `let (status_line, contents) = ...` untuk menangani hal tersebut.
+
 ## Referensi
 [Final Project: Building a Multithreaded Web Server](https://rust-book.cs.brown.edu/ch20-00-final-project-a-web-server.html)
