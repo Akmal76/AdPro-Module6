@@ -65,5 +65,12 @@ Untuk membuat implementasi _multithreaded_, `ThreadPool` diperbarui sehingga men
 
 Dengan implementasi ini, `ThreadPool` dapat secara efisien menangani banyak _tasks_  secara *concurrency* untuk menjaga jumlah _thread_ yang sesuai agar meminimalkan _overhead_. _Channel_ juga digunakan untuk menyampaikan _tasks_ secara aman di antara _thread_ yang tersedia.
 
+## Bonus
+Disini kita membuat sebuah fungsi baru yaitu `build` yang akan menggantikan fungsi `new`. Panduan _refactoring_ ini saya mengacu dari buku Rust pada bagian [Refactoring to Improve Modularity and Error Handling](https://doc.rust-lang.org/book/ch12-03-improving-error-handling-and-modularity.html).
+
+Pembeda antara `build()` dengan `new()` yaitu terletak pada pendekatan _error handling_. `build()` lebih baik dalam penanganan _error_ karena dapat memberikan nilai `Result` sementara `new()` cenderung untuk memicu _panic_ dalam kasus kesalahan yang tidak diharapkan.
+
+Jika ukuran yang diberikan untuk `ThreadPool` adalah `0` atau negatif, `build()` dapat mengembalikan `Err` dengan pesan yang menjelaskan bahwa ukuran yang diberikan tidak valid atau tidak masuk akal.
+
 ## Referensi
 [Final Project: Building a Multithreaded Web Server](https://rust-book.cs.brown.edu/ch20-00-final-project-a-web-server.html)

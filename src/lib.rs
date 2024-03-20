@@ -11,20 +11,19 @@ pub struct ThreadPool {
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
 impl ThreadPool {
-    pub fn new(size: usize) -> ThreadPool {
-        assert!(size > 0);
-
-        let (sender, receiver) = mpsc::channel();
-
-        let receiver = Arc::new(Mutex::new(receiver));
-
-        let mut workers = Vec::with_capacity(size);
-
-        for id in 0..size {
-            workers.push(Worker::new(id, Arc::clone(&receiver)));
+    pub fn build(size: usize) -> Result<ThreadPool, &'static str> {
+        if size <= 0 {
+            return Err("Number of threads makes no sense!");
         }
 
-        ThreadPool { workers, sender }
+        let (sender, receiver) = mpsc::channel();
+        let receiver = Arc::new(Mutex::new(receiver));
+
+        let workers: Vec<Worker> = (0..size)
+            .map(|id| Worker::new(id, Arc::clone(&receiver)))
+            .collect();
+
+        Ok(ThreadPool { workers, sender })
     }
     
     pub fn execute<F>(&self, f: F)
