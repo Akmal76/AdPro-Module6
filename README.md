@@ -58,5 +58,12 @@ Jika _request_-nya adalah `"GET /sleep HTTP/1.1"`, server akan _sleep_ selama 10
 
 Kita coba buka dua jendela _browser_ untuk membandingkan laman dengan _endpoint_ `/` dan `/sleep`. Jika kita memuat `/` setelah memuat `/sleep`, terlihat bahwa `/` menunggu sampai `/sleep` selesai _sleep_ selama 10 detik.
 
+## Milestone 5: Multithreaded Server
+Pada tahap ini kita mengubah _web server_ dari _single-threaded_ menjadi _multi-threaded_. **`ThreadPool`** digunakan untuk mengelola sejumlah _thread_ yang tersedia untuk menangani _tasks_ yang masuk. Pada contoh ini, awalnya `ThreadPool` hanya menyimpan `Worker` yang merupakan struktur yang berisi `JoinHandle<()>` untuk masing-masing _thread_.
+
+Untuk membuat implementasi _multithreaded_, `ThreadPool` diperbarui sehingga menyimpan vektor dari `Worker` tersebut. Setiap `Worker` memiliki `id` unik dan sebuah _thread_ yang diinisialisasi dengan _closure_ kosong. Pada saat pembuatan `ThreadPool`, sebuah _channel_ juga dibuat dimana _sender_ disimpan di `ThreadPool` dan _receiver_ disalin ke setiap `Worker`. _Closure_ yang diterima oleh `execute` kemudian dikirim melalui _sender channel_ untuk dieksekusi oleh salah satu _thread_ yang tersedia. `Worker` akan terus meminta _tasks_  dari _receiver channel_ dan menjalankannya dalam loop menggunakan `mutex` untuk menghindari _race condition_.
+
+Dengan implementasi ini, `ThreadPool` dapat secara efisien menangani banyak _tasks_  secara *concurrency* untuk menjaga jumlah _thread_ yang sesuai agar meminimalkan _overhead_. _Channel_ juga digunakan untuk menyampaikan _tasks_ secara aman di antara _thread_ yang tersedia.
+
 ## Referensi
 [Final Project: Building a Multithreaded Web Server](https://rust-book.cs.brown.edu/ch20-00-final-project-a-web-server.html)
